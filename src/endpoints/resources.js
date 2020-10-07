@@ -1,5 +1,4 @@
 import express from 'express'
-import { ttlFromJsonld, n3FromJsonld } from '../rdf.js'
 import _ from 'lodash'
 import { handleError } from '../error.js'
 
@@ -90,10 +89,6 @@ resourcesRouter.get('/:resourceId', (req, res) => {
         'text/html': () => res.send(`<pre>${JSON.stringify(returnResource, null, 2)}</pre>`),
         'application/json': () => res.send(returnResource),
         'application/ld+json': () => res.send(returnResource.data),
-        'text/n3': () => n3FromJsonld(returnResource.data)
-          .then((n3) => res.send(n3)),
-        'text/turtle': () => ttlFromJsonld(returnResource.data)
-          .then((ttl) => res.send(ttl)),
         default: () => res.sendStatus(406)
       })
     })
