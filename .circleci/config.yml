@@ -215,4 +215,11 @@ workflows:
       - update_ecs_stage:
           requires:
             - register_stage_image
+          filters:
+            branches:
+              ignore:
+                - /.*/
+            tags:
+              only:
+                - /v.[0-9\.]+-beta/
           context: ld4p
