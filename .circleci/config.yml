@@ -144,14 +144,13 @@ jobs:
             unset AWS_SESSION_TOKEN
             aws configure set region us-west-2
             aws configure set output json
-            temp_creds=$(aws sts assume-role --role-session-name DevelopersRole --role-arn $DEV_ROLE_ARN --profile circle | jq .Credentials)
+            temp_creds=$(aws sts assume-role --role-session-name DevelopersRole --role-arn $STAGE_ROLE_ARN --profile circle | jq .Credentials)
             export AWS_ACCESS_KEY_ID=$(echo "$temp_creds" | jq .AccessKeyId | xargs)
             export AWS_SECRET_ACCESS_KEY=$(echo "$temp_creds" | jq .SecretAccessKey | xargs)
             export AWS_SESSION_TOKEN=$(echo "$temp_creds" | jq .SessionToken | xargs)
             aws configure list # Show confirmation of config
             task_arn=$(aws ecs list-task-definitions --family-prefix sinopia-api --region us-west-2 --sort DESC --max-items 1 | jq --raw-output --exit-status '.taskDefinitionArns[]')
             cluster_arn=$(aws ecs list-clusters --region us-west-2 | jq --raw-output --exit-status '.clusterArns[] | select(contains(":cluster/sinopia-stage"))')
-            # echo -n "task_arn=$task_arn\ncluster_arn=$cluster_arn\n"
             aws ecs update-service --service sinopia-api --region us-west-2 --cluster $cluster_arn --task-definition $task_arn --force-new-deployment
 workflows:
   version: 2
@@ -211,6 +210,13 @@ workflows:
       - update_ecs_dev:
           requires:
             - register_latest_image
+          filters:
+            branches:
+              only:
+                - main
+            tags:
+              ignore:
+                - /v.*/
           context: ld4p
       - update_ecs_stage:
           requires:
