@@ -220,7 +220,8 @@ workflows:
           context: ld4p
       - update_ecs_stage:
           requires:
-            - register_stage_image
+            - build
+            # - register_stage_image
           filters:
             branches:
               ignore:
