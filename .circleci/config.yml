@@ -76,7 +76,7 @@ jobs:
             docker push ld4p/sinopia_dev_setup:latest
             docker build -t ld4p/sinopia_dev_setup:cypress -f Dockerfile-setup-cypress .
             docker push ld4p/sinopia_dev_setup:cypress
-  register_tag_image:
+  register_stage_image:
     <<: *defaults
     steps:
       - checkout
@@ -88,9 +88,25 @@ jobs:
       - run:
           name: Build & Register Images
           command: |
-            docker build -t ld4p/sinopia_api:$CIRCLE_TAG .
+            docker build -t ld4p/sinopia_api:release-stage .
             echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
-            docker push ld4p/sinopia_api:$CIRCLE_TAG
+            docker push ld4p/sinopia_api:release-stage
+  register_stage_and_prod_image:
+    <<: *defaults
+    steps:
+      - checkout
+      - setup_remote_docker
+      - restore_cache: # gives us back matching node_modules
+          key: dependencies-prod-{{ checksum "package-lock.json" }}
+      - attach_workspace:
+          at: .
+      - run:
+          name: Build & Register Images
+          command: |
+            docker build -t ld4p/sinopia_api:release-stage -t ld4p/sinopia_api:release-prod .
+            echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+            docker push ld4p/sinopia_api:release-stage
+            docker push ld4p/sinopia_api:release-prod
   update_ecs:
     working_directory: ~/sinopia_api
     docker: # NOT the default
@@ -147,7 +163,7 @@ workflows:
               ignore:
                 - /v.*/
           context: ld4p
-      - register_tag_image:
+      - register_stage_image:
           requires:
             - build
           filters:
@@ -156,7 +172,18 @@ workflows:
                 - /.*/
             tags:
               only:
-                - /v.*/
+                - /v.[0-9\.]+-beta/
+          context: ld4p
+      - register_stage_and_prod_image:
+          requires:
+            - build
+          filters:
+            branches:
+              ignore:
+                - /.*/
+            tags:
+              only:
+                - /v.[0-9\.]+/
           context: ld4p
       - update_ecs:
           requires:
