@@ -117,7 +117,7 @@ workflows:
           image: ld4p/sinopia_dev_setup
           tag: cypress
           dockerfile: Dockerfile-setup-cypress
-      - deploy_ecs:
+      - deploy-ecs:
           context: ld4p
           requires:
             - publish-dev
