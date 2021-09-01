@@ -102,6 +102,7 @@ workflows:
           image: ld4p/sinopia_api
           tag: latest
       - docker/publish:
+          name: publish-dev-setup
           context: ld4p
           docker-password: DOCKER_PASS
           docker-username: DOCKER_USER
@@ -109,6 +110,7 @@ workflows:
           tag: latest
           dockerfile: Dockerfile-setup
       - docker/publish:
+          name: publish-dev-cypress
           context: ld4p
           docker-password: DOCKER_PASS
           docker-username: DOCKER_USER

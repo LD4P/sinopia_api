@@ -7,7 +7,7 @@ WORKDIR /home/circleci
 COPY package.json .
 COPY package-lock.json .
 
-RUN npm install -g npm@latest
+RUN sudo npm install -g npm@latest
 RUN npm install
 
 COPY . .
