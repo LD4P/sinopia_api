@@ -116,7 +116,7 @@ workflows:
           dockerfile: Dockerfile-setup-cypress
       - deploy_ecs:
           context: ld4p
-          require:
+          requires:
             - publish-dev
 
 #             docker build -t ld4p/sinopia_dev_setup:latest -f Dockerfile-setup .
