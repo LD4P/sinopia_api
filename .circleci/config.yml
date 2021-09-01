@@ -1,6 +1,7 @@
 version: 2.1
 orbs:
   node: circleci/node@4.7.0
+  docker: circleci/docker@1.7.0
 executors:
   default:
     docker:
@@ -38,12 +39,27 @@ jobs:
             echo $result
             exit 1
             }
+  deploy_dev:
+    executor: default
+    steps:
+      - checkout
+      - node/install-packages:
+          cache-version: prod
+          override-ci-command: npm ci --only=production
+
+
 workflows:
   build:
     jobs:
       - test
       - lint
       - validate
+      - docker/publish:
+          docker-password: DOCKER_PASS
+          docker-username: DOCKER_USER
+          image: ld4p/sinopia_api
+          tag: latest
+
 
 # Javascript Node CircleCI 2.0 configuration file
 #
