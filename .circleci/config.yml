@@ -55,6 +55,7 @@ workflows:
       - lint
       - validate
       - docker/publish:
+          context: ld4p
           docker-password: DOCKER_PASS
           docker-username: DOCKER_USER
           image: ld4p/sinopia_api
