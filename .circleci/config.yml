@@ -101,6 +101,9 @@ workflows:
           docker-username: DOCKER_USER
           image: ld4p/sinopia_api
           tag: latest
+          executor:
+            name: docker/machine
+            dlc: true
       - docker/publish:
           name: publish-dev-setup
           context: ld4p
