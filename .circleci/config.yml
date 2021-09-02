@@ -90,26 +90,29 @@ workflows:
   build:
     jobs:
       - test:
-          branches:
-            only:
-              - /.*/
-          tags:
-            ignore:
-              - /.*/
+          filters:
+            branches:
+              only:
+                - /.*/
+            tags:
+              ignore:
+                - /.*/
       - lint:
-          branches:
-            only:
-              - /.*/
-          tags:
-            ignore:
-              - /.*/
+          filters:
+            branches:
+              only:
+                - /.*/
+            tags:
+              ignore:
+                - /.*/
       - validate:
-          branches:
-            only:
-              - /.*/
-          tags:
-            ignore:
-              - /.*/
+          filters:
+            branches:
+              only:
+                - /.*/
+            tags:
+              ignore:
+                - /.*/
       - docker/publish:
           name: publish-dev
           context: ld4p
@@ -121,12 +124,13 @@ workflows:
             - test
             - lint
             - validate
-          branches:
-            only:
-              - main
-          tags:
-            ignore:
-              - /.*/
+          filters:
+            branches:
+              only:
+                - main
+            tags:
+              ignore:
+                - /.*/
       - docker/publish:
           name: publish-dev-setup
           context: ld4p
@@ -139,12 +143,13 @@ workflows:
             - test
             - lint
             - validate
-          branches:
-            only:
-              - main
-          tags:
-            ignore:
-              - /.*/
+          filters:
+            branches:
+              only:
+                - main
+            tags:
+              ignore:
+                - /.*/
       - docker/publish:
           name: publish-dev-cypress
           context: ld4p
@@ -157,12 +162,13 @@ workflows:
             - test
             - lint
             - validate
-          branches:
-            only:
-              - main
-          tags:
-            ignore:
-              - /.*/
+          filters:
+            branches:
+              only:
+                - main
+            tags:
+              ignore:
+                - /.*/
       - docker/publish:
           name: publish-stage
           context: ld4p
@@ -170,12 +176,13 @@ workflows:
           docker-username: DOCKER_USER
           image: ld4p/sinopia_api
           tag: release-stage
-          branches:
-            ignore:
-              - /.*/
-          tags:
-            only:
-              - /v.[0-9\.]+(-beta)?/
+          filters:
+            branches:
+              ignore:
+                - /.*/
+            tags:
+              only:
+                - /v.[0-9\.]+(-beta)?/
       - docker/publish:
           name: publish-prod
           context: ld4p
@@ -183,23 +190,25 @@ workflows:
           docker-username: DOCKER_USER
           image: ld4p/sinopia_api
           tag: release-prod
-          branches:
-            ignore:
-              - /.*/
-          tags:
-            only:
-              - /v.[0-9\.]+/
+          filters:
+            branches:
+              ignore:
+                - /.*/
+            tags:
+              only:
+                - /v.[0-9\.]+/
       - deploy-ecs:
           name: deploy-ecs-dev
           context: ld4p
           requires:
             - publish-dev
-          branches:
-            only:
-              - main
-          tags:
-            ignore:
-              - /.*/
+          filters:
+            branches:
+              only:
+                - main
+            tags:
+              ignore:
+                - /.*/
       - deploy-ecs:
           name: deploy-ecs-stage
           context: ld4p
@@ -207,12 +216,13 @@ workflows:
           cluster: sinopia-staging
           requires:
             - publish-stage
-          branches:
-            ignore:
-              - /.*/
-          tags:
-            only:
-              - /v.[0-9\.]+(-beta)?/
+          filters:
+            branches:
+              ignore:
+                - /.*/
+            tags:
+              only:
+                - /v.[0-9\.]+(-beta)?/
       - deploy-ecs:
           name: deploy-ecs-prod
           context: ld4p
@@ -220,12 +230,13 @@ workflows:
           cluster: sinopia-production
           requires:
             - publish-prod
-          branches:
-            ignore:
-              - /.*/
-          tags:
-            only:
-              - /v.[0-9\.]+/
+          filters:
+            branches:
+              ignore:
+                - /.*/
+            tags:
+              only:
+                - /v.[0-9\.]+/
 #             docker build -t ld4p/sinopia_dev_setup:latest -f Dockerfile-setup .
 #             docker push ld4p/sinopia_dev_setup:latest
 #             docker build -t ld4p/sinopia_dev_setup:cypress -f Dockerfile-setup-cypress .
