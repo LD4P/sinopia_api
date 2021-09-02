@@ -96,14 +96,14 @@ workflows:
           tags:
             ignore:
               - /.*/
-      - lint
+      - lint:
           branches:
             only:
               - /.*/
           tags:
             ignore:
               - /.*/
-      - validate
+      - validate:
           branches:
             only:
               - /.*/
