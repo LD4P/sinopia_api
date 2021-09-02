@@ -89,11 +89,27 @@ jobs:
 workflows:
   build:
     jobs:
-      # TODO: These shouldn't run for tags.
-      - test
+      - test:
+          branches:
+            only:
+              - /.*/
+          tags:
+            ignore:
+              - /.*/
       - lint
+          branches:
+            only:
+              - /.*/
+          tags:
+            ignore:
+              - /.*/
       - validate
-      # TODO: These should depend on test, lint, validate.
+          branches:
+            only:
+              - /.*/
+          tags:
+            ignore:
+              - /.*/
       - docker/publish:
           name: publish-dev
           context: ld4p
@@ -101,9 +117,16 @@ workflows:
           docker-username: DOCKER_USER
           image: ld4p/sinopia_api
           tag: latest
-          executor:
-            name: docker/machine
-            dlc: true
+          requires:
+            - test
+            - lint
+            - validate
+          branches:
+            only:
+              - main
+          tags:
+            ignore:
+              - /.*/
       - docker/publish:
           name: publish-dev-setup
           context: ld4p
@@ -112,6 +135,16 @@ workflows:
           image: ld4p/sinopia_dev_setup
           tag: latest
           dockerfile: Dockerfile-setup
+          requires:
+            - test
+            - lint
+            - validate
+          branches:
+            only:
+              - main
+          tags:
+            ignore:
+              - /.*/
       - docker/publish:
           name: publish-dev-cypress
           context: ld4p
@@ -120,12 +153,79 @@ workflows:
           image: ld4p/sinopia_dev_setup
           tag: cypress
           dockerfile: Dockerfile-setup-cypress
+          requires:
+            - test
+            - lint
+            - validate
+          branches:
+            only:
+              - main
+          tags:
+            ignore:
+              - /.*/
+      - docker/publish:
+          name: publish-stage
+          context: ld4p
+          docker-password: DOCKER_PASS
+          docker-username: DOCKER_USER
+          image: ld4p/sinopia_api
+          tag: release-stage
+          branches:
+            ignore:
+              - /.*/
+          tags:
+            only:
+              - /v.[0-9\.]+(-beta)?/
+      - docker/publish:
+          name: publish-prod
+          context: ld4p
+          docker-password: DOCKER_PASS
+          docker-username: DOCKER_USER
+          image: ld4p/sinopia_api
+          tag: release-prod
+          branches:
+            ignore:
+              - /.*/
+          tags:
+            only:
+              - /v.[0-9\.]+/
       - deploy-ecs:
           name: deploy-ecs-dev
           context: ld4p
           requires:
             - publish-dev
-
+          branches:
+            only:
+              - main
+          tags:
+            ignore:
+              - /.*/
+      - deploy-ecs:
+          name: deploy-ecs-stage
+          context: ld4p
+          role-arn: STAGE_ROLE_ARN
+          cluster: sinopia-staging
+          requires:
+            - publish-stage
+          branches:
+            ignore:
+              - /.*/
+          tags:
+            only:
+              - /v.[0-9\.]+(-beta)?/
+      - deploy-ecs:
+          name: deploy-ecs-prod
+          context: ld4p
+          role-arn: PROD_ROLE_ARN
+          cluster: sinopia-production
+          requires:
+            - publish-prod
+          branches:
+            ignore:
+              - /.*/
+          tags:
+            only:
+              - /v.[0-9\.]+/
 #             docker build -t ld4p/sinopia_dev_setup:latest -f Dockerfile-setup .
 #             docker push ld4p/sinopia_dev_setup:latest
 #             docker build -t ld4p/sinopia_dev_setup:cypress -f Dockerfile-setup-cypress .
