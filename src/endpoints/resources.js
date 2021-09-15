@@ -1,5 +1,5 @@
 import express from 'express'
-import { ttlFromJsonld, n3FromJsonld } from '../rdf.js'
+import { datasetFromJsonld, n3FromJsonld, ttlFromJsonld } from '../rdf.js'
 import _ from 'lodash'
 import createError from 'http-errors'
 
@@ -9,6 +9,8 @@ const apiBaseUrl = process.env.API_BASE_URL
 
 resourcesRouter.post('/:resourceId', (req, res, next) => {
   console.log(`Received post to ${req.params.resourceId}`)
+
+  parseJsonld(req.body.data[0])
 
   const resource = req.body
   const resourceUri = resourceUriFor(req)
@@ -36,6 +38,8 @@ resourcesRouter.post('/:resourceId', (req, res, next) => {
 
 resourcesRouter.put('/:resourceId', (req, res, next) => {
   console.log(`Received put to ${req.params.resourceId}`)
+
+  parseJsonld(req.body.data[0])
 
   const resource = req.body
   const timestamp = new Date()
@@ -197,6 +201,12 @@ const parseDate = (dateString) => {
     throw createError(400, 'Bad Request', {details: `Invalid date-time: ${dateString}`})
   }
   return date
+}
+
+const parseJsonld = (jsonldString) => {
+  datasetFromJsonld(jsonldString).catch((err) => {
+    throw createError(400, 'Bad Request', {details: `Unsparseable JSON-LD: ${err}`})
+  })
 }
 
 const forReturn = (item) => {
