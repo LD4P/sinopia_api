@@ -4,6 +4,7 @@ orbs:
   docker: circleci/docker@2.0.3
   aws-cli: circleci/aws-cli@3.1.0
   gh: circleci/github-cli@2.2.0
+
 executors:
   default:
     docker:
@@ -44,6 +45,8 @@ references:
 jobs:
   validate:
     executor: default
+    machine:
+      image: default
     steps:
       - checkout
       - run:
@@ -60,6 +63,8 @@ jobs:
             }
   test:
     executor: default
+    machine:
+      image: default
     steps:
       - checkout
       - node/install-packages
@@ -84,6 +89,8 @@ jobs:
       cluster:
         type: string
         default: sinopia-dev
+    machine:
+      image: default
     executor: aws-cli/default
     steps:
       - aws-cli/setup:
