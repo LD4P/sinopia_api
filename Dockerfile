@@ -1,4 +1,4 @@
-FROM cimg/node:16.8
+FROM cimg/node:22.13.0
 
 WORKDIR /home/circleci
 
