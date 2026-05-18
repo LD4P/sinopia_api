@@ -9,6 +9,7 @@ Honeybadger.configure({
 })
 
 jest.mock("mongo.js")
+jest.mock("aws.js", () => require("./__mocks__/aws.js"))
 jest.mock("@honeybadger-io/js")
 
 describe("500 Server error", () => {

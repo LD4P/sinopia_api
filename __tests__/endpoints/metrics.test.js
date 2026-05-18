@@ -3,6 +3,7 @@ import request from "supertest"
 import app from "app.js"
 
 jest.mock("mongo.js")
+jest.mock("aws.js", () => require("../__mocks__/aws.js"))
 
 const response = { count: 1 }
 const mockAggregateResponse = jest.fn().mockResolvedValue([response])

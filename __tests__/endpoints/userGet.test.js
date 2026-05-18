@@ -15,6 +15,7 @@ const user = {
 }
 
 jest.mock("mongo.js")
+jest.mock("aws.js", () => require("../__mocks__/aws.js"))
 
 // GET a single user
 describe("GET /user/:userId", () => {

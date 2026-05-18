@@ -3,7 +3,7 @@ import app from "app.js"
 import * as aws from "aws.js"
 import FakeTimers from "@sinonjs/fake-timers"
 
-jest.mock("aws.js")
+jest.mock("aws.js", () => require("../__mocks__/aws.js"))
 jest.mock("jwt.js", () => {
   return {
     __esModule: true,

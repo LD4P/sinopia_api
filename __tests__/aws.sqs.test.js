@@ -6,6 +6,13 @@ import {
 } from "@aws-sdk/client-sqs"
 import { buildAndSendSqsMessage } from "aws.js"
 
+jest.mock("@aws-sdk/client-cognito-identity-provider", () => ({
+  CognitoIdentityProviderClient: jest.fn(),
+  paginateListGroups: jest.fn(),
+}))
+jest.mock("@aws-sdk/client-s3", () => ({ S3Client: jest.fn() }))
+jest.mock("@aws-sdk/client-lambda", () => ({ LambdaClient: jest.fn() }))
+jest.mock("@aws-sdk/client-comprehend", () => ({ ComprehendClient: jest.fn() }))
 jest.mock("@aws-sdk/client-sqs", () => {
   const mockSend = jest.fn()
   return {

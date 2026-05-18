@@ -9,7 +9,7 @@ resource.timestamp = new Date(resource.timestamp)
 // Multiple files.
 
 jest.mock("mongo.js")
-jest.mock("aws.js")
+jest.mock("aws.js", () => require("../__mocks__/aws.js"))
 jest.mock("jwt.js", () => {
   return {
     __esModule: true,

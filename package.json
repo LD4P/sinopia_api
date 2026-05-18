@@ -76,6 +76,10 @@
     "setupFiles": [
       "<rootDir>/jest.helpers.js"
     ],
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/__mocks__/"
+    ],
     "clearMocks": true,
     "collectCoverage": true,
     "coverageReporters": [

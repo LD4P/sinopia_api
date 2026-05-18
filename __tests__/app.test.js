@@ -2,6 +2,7 @@ import request from "supertest"
 import app from "app.js"
 
 jest.mock("mongo.js")
+jest.mock("aws.js", () => require("./__mocks__/aws.js"))
 
 describe("GET /", () => {
   it("returns health check", async () => {

@@ -2,7 +2,7 @@ import request from "supertest"
 import app from "app.js"
 import * as aws from "aws.js"
 
-jest.mock("aws.js")
+jest.mock("aws.js", () => require("../__mocks__/aws.js"))
 
 describe("GET /:resourceId/job/:username/:timestamp", () => {
   describe("MARC does not exist", () => {
