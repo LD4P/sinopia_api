@@ -11,6 +11,8 @@ const reqBody = require("../__fixtures__/req_6852a770-2961-4836-a833-0b21a9b6804
 // Multiple files.
 
 jest.mock("mongo.js")
+// eslint-disable-next-line global-require
+jest.mock("aws.js", () => require("../__mocks__/aws.js"))
 jest.mock("jwt.js", () => {
   return {
     __esModule: true,

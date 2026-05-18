@@ -11,6 +11,12 @@ import {
 import { requestMarc, hasMarc, getMarc } from "aws.js"
 import { Readable } from "stream"
 
+jest.mock("@aws-sdk/client-cognito-identity-provider", () => ({
+  CognitoIdentityProviderClient: jest.fn(),
+  paginateListGroups: jest.fn(),
+}))
+jest.mock("@aws-sdk/client-sqs", () => ({ SQSClient: jest.fn() }))
+jest.mock("@aws-sdk/client-comprehend", () => ({ ComprehendClient: jest.fn() }))
 jest.mock("@aws-sdk/client-s3", () => {
   const mockSend = jest.fn()
   return {

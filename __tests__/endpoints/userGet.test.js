@@ -15,6 +15,8 @@ const user = {
 }
 
 jest.mock("mongo.js")
+// eslint-disable-next-line global-require
+jest.mock("aws.js", () => require("../__mocks__/aws.js"))
 
 // GET a single user
 describe("GET /user/:userId", () => {
