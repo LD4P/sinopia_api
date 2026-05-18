@@ -3,6 +3,7 @@ import app from "app.js"
 import * as aws from "aws.js"
 import FakeTimers from "@sinonjs/fake-timers"
 
+// eslint-disable-next-line global-require
 jest.mock("aws.js", () => require("../__mocks__/aws.js"))
 jest.mock("jwt.js", () => {
   return {

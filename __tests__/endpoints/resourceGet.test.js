@@ -13,6 +13,7 @@ const resourceRefsResp = require("../__fixtures__/resource_refs_resp.json")
 // Multiple files.
 
 jest.mock("mongo.js")
+// eslint-disable-next-line global-require
 jest.mock("aws.js", () => require("../__mocks__/aws.js"))
 
 // GET all resources

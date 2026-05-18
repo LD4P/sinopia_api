@@ -3,6 +3,7 @@ import request from "supertest"
 import app from "app.js"
 
 jest.mock("mongo.js")
+// eslint-disable-next-line global-require
 jest.mock("aws.js", () => require("../__mocks__/aws.js"))
 jest.mock("jwt.js", () => {
   return {

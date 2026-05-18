@@ -9,6 +9,7 @@ Honeybadger.configure({
 })
 
 jest.mock("mongo.js")
+// eslint-disable-next-line global-require
 jest.mock("aws.js", () => require("./__mocks__/aws.js"))
 jest.mock("@honeybadger-io/js")
 
